@@ -75,7 +75,9 @@ contract FreeRider is Test {
         // Approve tokens, and then create Uniswap v2 pair against WETH and add liquidity
         // Note that the function takes care of deploying the pair automatically
         dvt.approve(address(uniswapV2Router), UNISWAP_INITIAL_TOKEN_RESERVE);
-        uniswapV2Router.addLiquidityETH{value: UNISWAP_INITIAL_WETH_RESERVE}(
+        uniswapV2Router.addLiquidityETH{
+            value: UNISWAP_INITIAL_WETH_RESERVE
+        }(
             address(dvt), // token to be traded against WETH
             UNISWAP_INITIAL_TOKEN_RESERVE, // amountTokenDesired
             0, // amountTokenMin
@@ -91,9 +93,7 @@ contract FreeRider is Test {
         assertEq(uniswapV2Pair.token1(), address(weth));
         assertGt(uniswapV2Pair.balanceOf(deployer), 0);
 
-        freeRiderNFTMarketplace = new FreeRiderNFTMarketplace{
-            value: MARKETPLACE_INITIAL_ETH_BALANCE
-        }(AMOUNT_OF_NFTS);
+        freeRiderNFTMarketplace = new FreeRiderNFTMarketplace{value: MARKETPLACE_INITIAL_ETH_BALANCE}(AMOUNT_OF_NFTS);
 
         damnValuableNFT = DamnValuableNFT(freeRiderNFTMarketplace.token());
 
@@ -120,10 +120,7 @@ contract FreeRider is Test {
 
         vm.startPrank(buyer);
 
-        freeRiderBuyer = new FreeRiderBuyer{value: BUYER_PAYOUT}(
-            attacker,
-            address(damnValuableNFT)
-        );
+        freeRiderBuyer = new FreeRiderBuyer{value: BUYER_PAYOUT}(attacker, address(damnValuableNFT));
 
         vm.stopPrank();
 

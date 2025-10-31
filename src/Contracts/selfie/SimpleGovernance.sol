@@ -84,9 +84,9 @@ contract SimpleGovernance {
      */
     function _canBeExecuted(uint256 actionId) private view returns (bool) {
         GovernanceAction memory actionToExecute = actions[actionId];
-        return (
-            actionToExecute.executedAt == 0 && (block.timestamp - actionToExecute.proposedAt >= ACTION_DELAY_IN_SECONDS)
-        );
+        return
+            (actionToExecute.executedAt == 0
+                    && (block.timestamp - actionToExecute.proposedAt >= ACTION_DELAY_IN_SECONDS));
     }
 
     function _hasEnoughVotes(address account) private view returns (bool) {

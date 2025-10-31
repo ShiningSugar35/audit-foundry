@@ -74,7 +74,9 @@ contract Puppet is Test {
 
         // Add initial token and ETH liquidity to the pool
         dvt.approve(address(uniswapExchange), UNISWAP_INITIAL_TOKEN_RESERVE);
-        uniswapExchange.addLiquidity{value: UNISWAP_INITIAL_ETH_RESERVE}(
+        uniswapExchange.addLiquidity{
+            value: UNISWAP_INITIAL_ETH_RESERVE
+        }(
             0, // min_liquidity
             UNISWAP_INITIAL_TOKEN_RESERVE, // max_tokens
             DEADLINE // deadline

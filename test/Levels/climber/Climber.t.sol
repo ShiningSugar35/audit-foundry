@@ -45,10 +45,7 @@ contract Climber is Test {
         vm.label(address(climberImplementation), "climber Implementation");
 
         bytes memory data = abi.encodeWithSignature("initialize(address,address,address)", deployer, proposer, sweeper);
-        climberVaultProxy = new ERC1967Proxy(
-            address(climberImplementation),
-            data
-        );
+        climberVaultProxy = new ERC1967Proxy(address(climberImplementation), data);
 
         assertEq(ClimberVault(address(climberVaultProxy)).getSweeper(), sweeper);
 

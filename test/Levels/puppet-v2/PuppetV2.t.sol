@@ -65,7 +65,9 @@ contract PuppetV2 is Test {
 
         // Create Uniswap pair against WETH and add liquidity
         dvt.approve(address(uniswapV2Router), UNISWAP_INITIAL_TOKEN_RESERVE);
-        uniswapV2Router.addLiquidityETH{value: UNISWAP_INITIAL_WETH_RESERVE}(
+        uniswapV2Router.addLiquidityETH{
+            value: UNISWAP_INITIAL_WETH_RESERVE
+        }(
             address(dvt),
             UNISWAP_INITIAL_TOKEN_RESERVE, // amountTokenDesired
             0, // amountTokenMin
@@ -80,12 +82,7 @@ contract PuppetV2 is Test {
         assertGt(uniswapV2Pair.balanceOf(deployer), 0);
 
         // Deploy the lending pool
-        puppetV2Pool = new PuppetV2Pool(
-            address(weth),
-            address(dvt),
-            address(uniswapV2Pair),
-            address(uniswapV2Factory)
-        );
+        puppetV2Pool = new PuppetV2Pool(address(weth), address(dvt), address(uniswapV2Pair), address(uniswapV2Factory));
 
         // Setup initial token balances of pool and attacker account
         dvt.transfer(attacker, ATTACKER_INITIAL_TOKEN_BALANCE);

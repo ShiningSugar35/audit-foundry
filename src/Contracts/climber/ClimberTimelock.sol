@@ -88,10 +88,12 @@ contract ClimberTimelock is AccessControl {
     /**
      * Anyone can execute what has been scheduled via `schedule`
      */
-    function execute(address[] calldata targets, uint256[] calldata values, bytes[] calldata dataElements, bytes32 salt)
-        external
-        payable
-    {
+    function execute(
+        address[] calldata targets,
+        uint256[] calldata values,
+        bytes[] calldata dataElements,
+        bytes32 salt
+    ) external payable {
         require(targets.length > 0, "Must provide at least one target");
         require(targets.length == values.length);
         require(targets.length == dataElements.length);
